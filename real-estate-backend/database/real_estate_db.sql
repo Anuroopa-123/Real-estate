@@ -1,13 +1,12 @@
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('SUPER_ADMIN','ADMIN','BUYER') NOT NULL,
-    status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE if not exists users (
+ id INT AUTO_INCREMENT PRIMARY KEY,
+ name VARCHAR(100) NOT NULL,
+ email VARCHAR(150) UNIQUE NOT NULL,
+ password VARCHAR(255) NOT NULL,
+ role ENUM('SUPER_ADMIN','ADMIN','BUYER') NOT NULL,
+ status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE',
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 -- ── 2. REFRESH TOKENS ────────────────────────────────────────
 CREATE TABLE refresh_tokens (
   id           INT AUTO_INCREMENT PRIMARY KEY,
@@ -146,4 +145,40 @@ CREATE TABLE if not exists reviews (
   UNIQUE KEY uq_review (property_id, buyer_id),
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
   FOREIGN KEY (buyer_id)    REFERENCES users(id)       ON DELETE CASCADE
+);
+
+-- ── 11. Create admins──────────────────────────────────────────────
+
+CREATE TABLE admins (
+ id INT AUTO_INCREMENT PRIMARY KEY,
+
+ user_id INT NOT NULL,
+
+ phone VARCHAR(20),
+
+ department VARCHAR(100),
+
+ created_by INT,
+
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+ FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+ FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+
+CREATE TABLE buyers (
+ id INT AUTO_INCREMENT PRIMARY KEY,
+
+ user_id INT NOT NULL,
+
+ phone VARCHAR(20),
+
+ budget DECIMAL(12,2),
+
+ preferred_city VARCHAR(100),
+
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+ FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

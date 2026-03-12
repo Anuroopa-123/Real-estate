@@ -53,7 +53,22 @@ exports.createUser = async (body, adminId) => {
   if (existing) throw new Error("Email already in use");
 
   const hashed = await hashPassword(password);
-  const userId = await adminRepository.insertUser({ name, email, password: hashed, role, status, phone });
+  const userId = await adminRepository.insertUser({
+ name,
+ email,
+ password: hashed,
+ role,
+ status
+});
+if (role === "ADMIN") {
+
+  await adminRepository.insertAdminProfile({
+    userId,
+    phone,
+    createdBy: adminId
+  });
+
+}
 
   await adminRepository.logAction(adminId, "CREATE_USER", "USER", userId, { name, email, role });
 

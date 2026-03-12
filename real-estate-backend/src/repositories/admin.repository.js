@@ -90,8 +90,16 @@ exports.getRecentActivity = async (limit = 10) => {
 // ── Users CRUD ───────────────────────────────────────────────
 exports.findUsers = async ({ offset, limit, role, status, search }) => {
   let q = `
-    SELECT id, name, email, role, status, phone, created_at
-    FROM users
+    SELECT 
+      u.id,
+      u.name,
+      u.email,
+      u.role,
+      u.status,
+      a.phone,
+      u.created_at
+    FROM users u
+    LEFT JOIN admins a ON a.user_id = u.id
     WHERE 1=1`;
   const params = [];
 
@@ -117,27 +125,36 @@ exports.countUsersFiltered = async ({ role, status, search }) => {
   const [[row]] = await db.query(q, params);
   return row.total;
 };
-
 exports.findUserById = async (id) => {
   const [[row]] = await db.query(
-    `SELECT id, name, email, role, status, phone, avatar_url, created_at
-     FROM users WHERE id = ?`,
+    `SELECT 
+       u.id,
+       u.name,
+       u.email,
+       u.role,
+       u.status,
+       a.phone,
+       u.created_at
+     FROM users u
+     LEFT JOIN admins a ON a.user_id = u.id
+     WHERE u.id = ?`,
     [id]
   );
   return row || null;
 };
 
-exports.insertUser = async ({ name, email, password, role, status, phone }) => {
+exports.insertUser = async ({ name, email, password, role, status }) => {
+
   const [result] = await db.query(
-    `INSERT INTO users (name, email, password, role, status, phone)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [name, email, password, role, status, phone || null]
+    `INSERT INTO users (name, email, password, role, status)
+     VALUES (?, ?, ?, ?, ?)`,
+    [name, email, password, role, status]
   );
+
   return result.insertId;
 };
-
 exports.updateUser = async (id, fields) => {
-  const allowed = ["name", "email", "role", "status", "phone", "avatar_url"];
+ const allowed = ["name", "email", "role", "status"];
   const sets = [];
   const values = [];
 
@@ -286,4 +303,14 @@ exports.findActivityLogs = async ({ offset, limit }) => {
 exports.countActivityLogs = async () => {
   const [[row]] = await db.query("SELECT COUNT(*) AS total FROM admin_logs");
   return row.total;
+};
+
+exports.insertAdminProfile = async ({ userId, phone, createdBy }) => {
+
+  await db.query(
+    `INSERT INTO admins (user_id, phone, created_by)
+     VALUES (?, ?, ?)`,
+    [userId, phone || null, createdBy]
+  );
+
 };

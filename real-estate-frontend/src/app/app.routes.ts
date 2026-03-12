@@ -3,7 +3,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { DashboardComponent } from './features/super-admin/dashboard/dashboard.component';
 import {UsersComponent} from './features/super-admin/users/users.component';
 import { PropertiesComponent } from './features/super-admin/properties/properties.component';
-import { CreateAdminComponent } from './features/admin/create-admin/create-admin.component';
+import { CreateAdminComponent } from './features/super-admin/create-admin/create-admin.component';
 export const routes: Routes = [
       {
     path: '',
@@ -29,7 +29,7 @@ export const routes: Routes = [
   component:PropertiesComponent
 },
 {
-path:'admin/create-admin',
+path:'superadmin/create-admin',
 component:CreateAdminComponent
 }
 ];
