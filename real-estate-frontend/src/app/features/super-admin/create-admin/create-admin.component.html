@@ -1,0 +1,291 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div class="ph-left">
+    <a routerLink="../dashboard" class="back-btn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Back
+    </a>
+    <div class="ph-titles">
+      <div class="ph-tag">SYSTEM MANAGEMENT</div>
+      <h2 class="ph-h2">Create Admin Account</h2>
+      <p class="ph-sub">Grant admin-level access to manage properties, buyers, and appointments</p>
+    </div>
+  </div>
+
+  <div class="ph-badge">
+    <div class="phb-icon">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+    <div>
+      <span class="phb-title">Restricted Action</span>
+      <span class="phb-sub">SuperAdmin only</span>
+    </div>
+  </div>
+</div>
+
+<!-- Main layout -->
+<div class="create-layout">
+
+  <!-- Form Card -->
+  <div class="form-card">
+
+    <div class="fc-header">
+      <div class="fch-step">
+        <span class="step-num">01</span>
+        <span class="step-label">Admin Details</span>
+      </div>
+      <div class="fch-line"></div>
+      <div class="fch-step" [class.active]="form.name && form.email">
+        <span class="step-num">02</span>
+        <span class="step-label">Credentials</span>
+      </div>
+      <div class="fch-line"></div>
+      <div class="fch-step" [class.active]="form.password">
+        <span class="step-num">03</span>
+        <span class="step-label">Confirm</span>
+      </div>
+    </div>
+
+    <!-- Fields -->
+    <div class="fc-body">
+
+      <div class="field-row">
+        <div class="field-group" [class.filled]="form.name">
+          <label class="fl">Full Name <span class="req">*</span></label>
+          <div class="fi-wrap" [class.focus]="nameFocus">
+            <svg class="fi-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input class="fi" type="text" [(ngModel)]="form.name" placeholder="e.g. Rahul Sharma"
+              (focus)="nameFocus=true" (blur)="nameFocus=false"/>
+          </div>
+        </div>
+
+        <div class="field-group" [class.filled]="form.email">
+          <label class="fl">Email Address <span class="req">*</span></label>
+          <div class="fi-wrap" [class.focus]="emailFocus">
+            <svg class="fi-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <input class="fi" type="email" [(ngModel)]="form.email" placeholder="admin@example.com"
+              (focus)="emailFocus=true" (blur)="emailFocus=false"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group" [class.filled]="form.phone">
+          <label class="fl">Phone Number</label>
+          <div class="fi-wrap" [class.focus]="phoneFocus">
+            <svg class="fi-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.06 6.06l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
+            </svg>
+            <input class="fi" type="tel" [(ngModel)]="form.phone" placeholder="+91 00000 00000"
+              (focus)="phoneFocus=true" (blur)="phoneFocus=false"/>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="fl">Status</label>
+          <div class="fi-wrap select-wrap">
+            <svg class="fi-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/>
+            </svg>
+            <select class="fi fi-select" [(ngModel)]="form.status">
+              <option value="ACTIVE">Active — can login immediately</option>
+              <option value="INACTIVE">Inactive — disabled by default</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">Security Credentials</div>
+
+      <div class="field-row">
+        <div class="field-group" [class.filled]="form.password">
+          <label class="fl">Password <span class="req">*</span></label>
+          <div class="fi-wrap" [class.focus]="passFocus">
+            <svg class="fi-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+            </svg>
+            <input class="fi" [type]="showPass?'text':'password'" [(ngModel)]="form.password"
+              placeholder="Min. 8 characters" (focus)="passFocus=true" (blur)="passFocus=false"/>
+            <button class="eye-btn" type="button" (click)="showPass=!showPass">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path *ngIf="!showPass" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle *ngIf="!showPass" cx="12" cy="12" r="3"/>
+                <path *ngIf="showPass" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                <line *ngIf="showPass" x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Strength meter -->
+          <div class="strength-row" *ngIf="form.password">
+            <div class="strength-bars">
+              <div class="sb" [class.active]="strength >= 1" [class.s1]="strength===1" [class.s2]="strength===2" [class.s3]="strength===3" [class.s4]="strength===4"></div>
+              <div class="sb" [class.active]="strength >= 2" [class.s2]="strength===2" [class.s3]="strength===3" [class.s4]="strength===4"></div>
+              <div class="sb" [class.active]="strength >= 3" [class.s3]="strength===3" [class.s4]="strength===4"></div>
+              <div class="sb" [class.active]="strength >= 4" [class.s4]="strength===4"></div>
+            </div>
+            <span class="strength-label">{{ strengthLabel }}</span>
+          </div>
+        </div>
+
+        <div class="field-group" [class.filled]="form.confirmPassword">
+          <label class="fl">Confirm Password <span class="req">*</span></label>
+          <div class="fi-wrap" [class.focus]="conf2Focus" [class.error]="form.confirmPassword && form.password !== form.confirmPassword">
+            <svg class="fi-icon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <input class="fi" [type]="showPass?'text':'password'" [(ngModel)]="form.confirmPassword"
+              placeholder="Re-enter password" (focus)="conf2Focus=true" (blur)="conf2Focus=false"/>
+          </div>
+          <span class="match-err" *ngIf="form.confirmPassword && form.password !== form.confirmPassword">
+            Passwords do not match
+          </span>
+        </div>
+      </div>
+
+      <!-- Permissions Preview -->
+      <div class="perms-section">
+        <div class="perms-label">Admin Permissions Granted</div>
+        <div class="perms-grid">
+          <div class="perm-item granted">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Manage Buyers
+          </div>
+          <div class="perm-item granted">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve Properties
+          </div>
+          <div class="perm-item granted">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Manage Appointments
+          </div>
+          <div class="perm-item granted">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            View Enquiries
+          </div>
+          <div class="perm-item denied">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Create Admins
+          </div>
+          <div class="perm-item denied">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            System Settings
+          </div>
+        </div>
+      </div>
+
+      <!-- Error / Success -->
+      <div class="msg error-msg" *ngIf="errorMsg">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ errorMsg }}
+      </div>
+      <div class="msg success-msg" *ngIf="successMsg">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ successMsg }}
+      </div>
+
+    </div>
+
+    <!-- Footer actions -->
+    <div class="fc-footer">
+      <button class="btn-ghost" type="button" (click)="resetForm()">Reset</button>
+      <button class="btn-create" type="button" [disabled]="isLoading || !isValid()" (click)="createAdmin()">
+        <span *ngIf="!isLoading">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+          Create Admin Account
+        </span>
+        <span class="loader-dots" *ngIf="isLoading">
+          <span></span><span></span><span></span>
+        </span>
+        <div class="btn-shimmer"></div>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Side Info Panel -->
+  <div class="info-panel">
+
+    <div class="ip-section">
+      <div class="ip-tag">ROLE HIERARCHY</div>
+      <div class="hierarchy">
+        <div class="hier-row active">
+          <span class="hr-dot" style="background:#9b6dff"></span>
+          <div>
+            <span class="hr-label">Super Admin</span>
+            <span class="hr-sub">You are here</span>
+          </div>
+        </div>
+        <div class="hier-connector"></div>
+        <div class="hier-row new">
+          <span class="hr-dot" style="background:#4db8ff;animation:pulseDot 2s infinite"></span>
+          <div>
+            <span class="hr-label">Admin</span>
+            <span class="hr-sub">Being created</span>
+          </div>
+        </div>
+        <div class="hier-connector"></div>
+        <div class="hier-row">
+          <span class="hr-dot" style="background:#c9a96e"></span>
+          <div>
+            <span class="hr-label">Buyer</span>
+            <span class="hr-sub">Public access</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ip-section">
+      <div class="ip-tag">GUIDELINES</div>
+      <div class="guide-list">
+        <div class="guide-item">
+          <span class="gi-num">01</span>
+          <span>Use a corporate email address for the admin account</span>
+        </div>
+        <div class="guide-item">
+          <span class="gi-num">02</span>
+          <span>Password must be at least 8 characters with uppercase, lowercase and number</span>
+        </div>
+        <div class="guide-item">
+          <span class="gi-num">03</span>
+          <span>The new admin will receive an email with login credentials</span>
+        </div>
+        <div class="guide-item">
+          <span class="gi-num">04</span>
+          <span>Admin accounts can be deactivated at any time from User Management</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live preview -->
+    <div class="ip-section preview-card" *ngIf="form.name || form.email">
+      <div class="ip-tag">PREVIEW</div>
+      <div class="prev-avatar">{{ form.name?.charAt(0)?.toUpperCase() || '?' }}</div>
+      <div class="prev-name">{{ form.name || 'Admin Name' }}</div>
+      <div class="prev-email">{{ form.email || 'email@example.com' }}</div>
+      <div class="prev-badge">
+        <span class="role-chip admin">Admin</span>
+        <span class="status-pill" [ngClass]="form.status?.toLowerCase()">
+          <span class="sp-dot"></span>{{ form.status }}
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+</div>

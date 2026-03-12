@@ -1,0 +1,120 @@
+<!-- Header -->
+<div class="page-header">
+  <div>
+    <h2 class="page-h2">Properties</h2>
+    <p class="page-sub">Review and manage all property listings</p>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-bar">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+    </svg>
+    <input class="search-input" type="text" [(ngModel)]="filters.search"
+      placeholder="Search by title or agent…" (keyup.enter)="load()"/>
+  </div>
+  <select class="filter-select" [(ngModel)]="filters.status" (change)="load()">
+    <option value="">All Status</option>
+    <option value="PENDING">Pending</option>
+    <option value="APPROVED">Approved</option>
+    <option value="REJECTED">Rejected</option>
+  </select>
+  <input class="filter-input" type="text" [(ngModel)]="filters.city"
+    placeholder="Filter by city…" (keyup.enter)="load()"/>
+</div>
+
+<!-- Cards or Table -->
+<div class="sk-grid" *ngIf="isLoading">
+  <div class="sk-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+</div>
+
+<ng-container *ngIf="!isLoading">
+
+  <div class="prop-grid" *ngIf="properties.length; else empty">
+    <div class="prop-card" *ngFor="let p of properties">
+
+      <!-- Status ribbon -->
+      <div class="prop-ribbon" [ngClass]="p.status.toLowerCase()">{{ p.status }}</div>
+
+      <!-- Card body -->
+      <div class="prop-body">
+        <div class="prop-top">
+          <div class="prop-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+              <polyline points="9,22 9,12 15,12 15,22"/>
+            </svg>
+          </div>
+          <div class="prop-meta">
+            <span class="prop-type">{{ p.property_type || 'Property' }}</span>
+            <span class="prop-date">{{ p.created_at | date:'MMM d, yyyy' }}</span>
+          </div>
+        </div>
+
+        <h4 class="prop-title">{{ p.title }}</h4>
+        <div class="prop-details">
+          <span class="pd-item">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            {{ p.city || 'N/A' }}
+          </span>
+          <span class="pd-item">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+            </svg>
+            ₹{{ p.price | number }}
+          </span>
+        </div>
+
+        <div class="prop-agent" *ngIf="p.agent_name">
+          <span class="pa-avatar">{{ p.agent_name?.charAt(0) }}</span>
+          <span class="pa-name">{{ p.agent_name }}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="prop-actions">
+        <button class="pa-btn approve" *ngIf="p.status === 'PENDING'" (click)="approve(p.id)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Approve
+        </button>
+        <button class="pa-btn reject" *ngIf="p.status === 'PENDING'" (click)="reject(p.id)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Reject
+        </button>
+        <button class="pa-btn re-review" *ngIf="p.status !== 'PENDING'" (click)="approve(p.id)" style="display:none"></button>
+        <button class="pa-btn del" (click)="delete(p.id)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template #empty>
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9,22 9,12 15,12 15,22"/>
+      </svg>
+      <p>No properties found</p>
+    </div>
+  </ng-template>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="meta.pages > 1">
+    <button class="pg-btn" [disabled]="page === 1" (click)="changePage(page-1)">‹</button>
+    <button *ngFor="let p of pages" class="pg-btn" [class.active]="p === page" (click)="changePage(p)">{{ p }}</button>
+    <button class="pg-btn" [disabled]="page === meta.pages" (click)="changePage(page+1)">›</button>
+  </div>
+
+</ng-container>

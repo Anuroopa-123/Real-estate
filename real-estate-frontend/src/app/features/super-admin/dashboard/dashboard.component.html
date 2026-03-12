@@ -1,3 +1,359 @@
-<h1>Super Admin Dashboard</h1>
+<!-- ── Welcome Banner ─────────────────────────────────────── -->
+<div class="welcome-banner">
+  <div class="wb-left">
+    <div class="wb-tag">SUPER ADMIN COMMAND CENTER</div>
+    <h1 class="wb-title">Good {{ greeting }}, <em>System Owner</em></h1>
+    <p class="wb-sub">{{ today }} — Real-time overview of the entire platform</p>
+  </div>
+  <div class="wb-right">
+    <div class="wb-metric">
+      <span class="wm-val">{{ stats?.totalUsers ?? '—' }}</span>
+      <span class="wm-label">Platform Users</span>
+    </div>
+    <div class="wb-divider"></div>
+    <div class="wb-metric">
+      <span class="wm-val">{{ stats?.totalProperties ?? '—' }}</span>
+      <span class="wm-label">Properties</span>
+    </div>
+    <div class="wb-divider"></div>
+    <div class="wb-metric">
+      <span class="wm-val live">{{ stats?.todayAppointments ?? 0 }}</span>
+      <span class="wm-label">Today's Appts</span>
+    </div>
+  </div>
+</div>
 
-<p>Welcome to Real Estate Admin Panel</p>
+<!-- Skeleton -->
+<div class="sk-grid" *ngIf="isLoading">
+  <div class="sk-c" *ngFor="let i of [1,2,3,4]"></div>
+</div>
+
+<ng-container *ngIf="!isLoading && stats">
+
+  <!-- ── Stat Cards Row ──────────────────────────────────── -->
+  <div class="kpi-row">
+
+    <div class="kpi-card" style="--a:#c9a96e;--a2:rgba(201,169,110,0.08)" [style.animationDelay]="'0ms'">
+      <div class="kpi-glow"></div>
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        <div class="kpi-trend up">+{{ stats.newUsersToday }} today</div>
+      </div>
+      <div class="kpi-num">{{ stats.totalUsers }}</div>
+      <div class="kpi-label">Total Users</div>
+      <div class="kpi-breakdown">
+        <span>{{ stats.totalAdmins }} Admins</span>
+        <span>{{ stats.totalBuyers }} Buyers</span>
+      </div>
+      <div class="kpi-progress">
+        <div class="kp-fill" [style.width.%]="80"></div>
+      </div>
+    </div>
+
+    <div class="kpi-card" style="--a:#4db8ff;--a2:rgba(77,184,255,0.08)" [style.animationDelay]="'60ms'">
+      <div class="kpi-glow"></div>
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+        </div>
+        <div class="kpi-trend warn">{{ stats.pendingProperties }} pending</div>
+      </div>
+      <div class="kpi-num">{{ stats.totalProperties }}</div>
+      <div class="kpi-label">Properties</div>
+      <div class="kpi-breakdown">
+        <span>{{ stats.approvedProperties }} Approved</span>
+        <span>{{ stats.soldProperties }} Sold</span>
+      </div>
+      <div class="kpi-progress">
+        <div class="kp-fill" [style.width.%]="getPct(stats.approvedProperties, stats.totalProperties)"></div>
+      </div>
+    </div>
+
+    <div class="kpi-card" style="--a:#4dffa6;--a2:rgba(77,255,166,0.08)" [style.animationDelay]="'120ms'">
+      <div class="kpi-glow"></div>
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div class="kpi-trend up">{{ stats.todayAppointments }} today</div>
+      </div>
+      <div class="kpi-num">{{ stats.totalAppointments }}</div>
+      <div class="kpi-label">Appointments</div>
+      <div class="kpi-breakdown">
+        <span>All time</span>
+        <span>Across platform</span>
+      </div>
+      <div class="kpi-progress">
+        <div class="kp-fill" [style.width.%]="55"></div>
+      </div>
+    </div>
+
+    <div class="kpi-card" style="--a:#ff7eb3;--a2:rgba(255,126,179,0.08)" [style.animationDelay]="'180ms'">
+      <div class="kpi-glow"></div>
+      <div class="kpi-top">
+        <div class="kpi-icon-wrap">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="kpi-trend">{{ stats.activeAgents }} active</div>
+      </div>
+      <div class="kpi-num">{{ stats.totalAdmins }}</div>
+      <div class="kpi-label">Admins</div>
+      <div class="kpi-breakdown">
+        <span>{{ stats.totalAgents }} Agents</span>
+        <span>Active now</span>
+      </div>
+      <div class="kpi-progress">
+        <div class="kp-fill" [style.width.%]="65"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Property Pipeline ───────────────────────────────── -->
+  <div class="section-label">
+    <span>PROPERTY PIPELINE</span>
+    <div class="sl-line"></div>
+    <a routerLink="../properties" class="sl-link">View All →</a>
+  </div>
+
+  <div class="pipeline-row">
+    <div class="pipeline-stage" style="--sc:#ffd166">
+      <div class="ps-num">{{ stats.pendingProperties }}</div>
+      <div class="ps-label">Pending Review</div>
+      <div class="ps-bar"><div class="ps-fill" [style.width.%]="getPct(stats.pendingProperties, stats.totalProperties)"></div></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-stage" style="--sc:#4dffa6">
+      <div class="ps-num">{{ stats.approvedProperties }}</div>
+      <div class="ps-label">Approved</div>
+      <div class="ps-bar"><div class="ps-fill" [style.width.%]="getPct(stats.approvedProperties, stats.totalProperties)"></div></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-stage" style="--sc:#c9a96e">
+      <div class="ps-num">{{ stats.soldProperties }}</div>
+      <div class="ps-label">Sold</div>
+      <div class="ps-bar"><div class="ps-fill" [style.width.%]="getPct(stats.soldProperties, stats.totalProperties)"></div></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-stage" style="--sc:#ff6b6b">
+      <div class="ps-num">{{ stats.rejectedProperties }}</div>
+      <div class="ps-label">Rejected</div>
+      <div class="ps-bar"><div class="ps-fill" [style.width.%]="getPct(stats.rejectedProperties, stats.totalProperties)"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Main Grid ───────────────────────────────────────── -->
+  <div class="main-grid">
+
+    <!-- Left: Recent Users + Recent Properties -->
+    <div class="grid-left">
+
+      <!-- Recent Users -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">
+            <span class="pt-dot" style="background:#c9a96e"></span>
+            Recent Users
+          </h3>
+          <a routerLink="../users" class="panel-link">Manage →</a>
+        </div>
+        <div class="user-list">
+          <div class="ul-head">
+            <span>User</span><span>Role</span><span>Status</span><span>Joined</span>
+          </div>
+          <div class="ul-row" *ngFor="let u of stats.recentUsers; let i = index"
+            [style.animationDelay]="(i * 40) + 'ms'">
+            <div class="ul-user">
+              <div class="ul-av" [style.background]="getAvatarBg(u.role)">{{ u.name?.charAt(0)?.toUpperCase() }}</div>
+              <div class="ul-info">
+                <span class="ul-name">{{ u.name }}</span>
+                <span class="ul-email">{{ u.email }}</span>
+              </div>
+            </div>
+            <span class="role-chip" [ngClass]="roleClass(u.role)">{{ u.role | roleLabel }}</span>
+            <span class="status-pill" [ngClass]="u.status?.toLowerCase()">
+              <span class="sp-dot"></span>{{ u.status }}
+            </span>
+            <span class="ul-date">{{ u.created_at | date:'MMM d' }}</span>
+          </div>
+          <div class="ul-empty" *ngIf="!stats.recentUsers?.length">No users yet</div>
+        </div>
+      </div>
+
+      <!-- Recent Properties -->
+      <div class="panel" style="margin-top:18px">
+        <div class="panel-header">
+          <h3 class="panel-title">
+            <span class="pt-dot" style="background:#4db8ff"></span>
+            Recent Properties
+          </h3>
+          <a routerLink="../properties" class="panel-link">Manage →</a>
+        </div>
+        <div class="prop-list">
+          <div class="pl-row" *ngFor="let p of stats.recentProperties; let i = index"
+            [style.animationDelay]="(i * 40) + 'ms'">
+            <div class="pl-icon">🏠</div>
+            <div class="pl-info">
+              <span class="pl-title">{{ p.title }}</span>
+              <span class="pl-meta">{{ p.city }} • ₹{{ p.price | number }}</span>
+            </div>
+            <span class="prop-chip" [ngClass]="p.status?.toLowerCase()">{{ p.status }}</span>
+          </div>
+          <div class="ul-empty" *ngIf="!stats.recentProperties?.length">No properties yet</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Quick Actions + Audit Log -->
+    <div class="grid-right">
+
+      <!-- Quick Actions -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">
+            <span class="pt-dot" style="background:#ff7eb3"></span>
+            Quick Actions
+          </h3>
+        </div>
+        <div class="quick-actions">
+          <a routerLink="../create-admin" class="qa-btn primary">
+            <div class="qa-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+              </svg>
+            </div>
+            <div class="qa-text">
+              <span class="qa-title">Create Admin</span>
+              <span class="qa-sub">Add new admin account</span>
+            </div>
+            <svg class="qa-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <a routerLink="../users" class="qa-btn">
+            <div class="qa-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+            </div>
+            <div class="qa-text">
+              <span class="qa-title">Manage Users</span>
+              <span class="qa-sub">{{ stats.totalUsers }} total users</span>
+            </div>
+            <svg class="qa-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <a routerLink="../properties" class="qa-btn">
+            <div class="qa-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                <polyline points="9,22 9,12 15,12 15,22"/>
+              </svg>
+            </div>
+            <div class="qa-text">
+              <span class="qa-title">Review Properties</span>
+              <span class="qa-sub">{{ stats.pendingProperties }} pending approval</span>
+            </div>
+            <svg class="qa-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <a routerLink="../appointments" class="qa-btn">
+            <div class="qa-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="qa-text">
+              <span class="qa-title">Appointments</span>
+              <span class="qa-sub">{{ stats.todayAppointments }} scheduled today</span>
+            </div>
+            <svg class="qa-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Audit Log -->
+      <div class="panel" style="margin-top:18px">
+        <div class="panel-header">
+          <h3 class="panel-title">
+            <span class="pt-dot" style="background:#4dffa6"></span>
+            Audit Log
+          </h3>
+          <span class="live-badge">● LIVE</span>
+        </div>
+        <div class="audit-list">
+          <div class="audit-row" *ngFor="let log of stats.auditLogs; let i = index"
+            [style.animationDelay]="(i*30)+'ms'">
+            <div class="ar-indicator" [ngClass]="getLogClass(log.action)"></div>
+            <div class="ar-body">
+              <span class="ar-action">{{ log.action }}</span>
+              <span class="ar-meta">{{ log.admin_name }} · {{ log.target_type }}</span>
+            </div>
+            <span class="ar-time">{{ log.created_at | date:'HH:mm' }}</span>
+          </div>
+          <div class="ul-empty" *ngIf="!stats.auditLogs?.length">No audit logs yet</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ── Recent Appointments ─────────────────────────────── -->
+  <div class="section-label" style="margin-top:24px">
+    <span>RECENT APPOINTMENTS</span>
+    <div class="sl-line"></div>
+    <a routerLink="../appointments" class="sl-link">View All →</a>
+  </div>
+
+  <div class="appt-row">
+    <div class="appt-card" *ngFor="let a of stats.recentAppointments; let i = index"
+      [style.animationDelay]="(i*50)+'ms'">
+      <div class="ac-top">
+        <span class="appt-status" [ngClass]="a.status?.toLowerCase()">{{ a.status }}</span>
+        <span class="ac-time">{{ a.scheduled_at | date:'MMM d, h:mm a' }}</span>
+      </div>
+      <div class="ac-prop">{{ a.property_title }}</div>
+      <div class="ac-buyer">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        {{ a.buyer_name }}
+      </div>
+    </div>
+    <div class="ul-empty" *ngIf="!stats.recentAppointments?.length" style="padding:24px">
+      No appointments yet
+    </div>
+  </div>
+
+</ng-container>
