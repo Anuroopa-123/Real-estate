@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { DashboardComponent } from './features/super-admin/dashboard/dashboard.component';
+import {UsersComponent} from './features/super-admin/users/users.component';
+import { PropertiesComponent } from './features/super-admin/properties/properties.component';
 
 export const routes: Routes = [
       {
@@ -17,5 +19,13 @@ export const routes: Routes = [
   {
     path: 'superadmin/dashboard',
     component: DashboardComponent
-  }
+  },
+{
+  path:'superadmin/users',
+  component:UsersComponent
+},
+{
+  path:'superadmin/properties',
+  component:PropertiesComponent
+}
 ];
