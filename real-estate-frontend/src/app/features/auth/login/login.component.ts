@@ -35,7 +35,14 @@ export class LoginComponent {
       route: '/superadmin/dashboard' },
     { value: 'ADMIN',  label: 'Admin',  icon: '⚙️',
       description: 'Approve properties, manage agents and appointments.',
-      route: '/admin/dashboard' },
+      route: '/admin/admin-dashboard' },
+    {
+    value: 'AGENT',
+    label: 'Agent',
+    icon: '🏠',
+    description: 'Create and manage property listings.',
+    route: '/agent/dashboard'
+  },
     { value: 'BUYER',  label: 'Buyer',  icon: '🔑',
       description: 'Explore listings, save favourites and book viewings.',
       route: '/buyer/dashboard' },

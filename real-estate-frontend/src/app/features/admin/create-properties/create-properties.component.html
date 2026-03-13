@@ -1,0 +1,55 @@
+<div class="page-header">
+  <h2>Create Property</h2>
+  <p>Add a new property listing</p>
+</div>
+
+<div class="form-card">
+
+  <div class="form-group">
+    <label>Title</label>
+    <input type="text" [(ngModel)]="property.title" placeholder="Property Title">
+  </div>
+
+  <div class="form-group">
+    <label>Price</label>
+    <input type="number" [(ngModel)]="property.price" placeholder="Property Price">
+  </div>
+
+  <div class="form-group">
+    <label>City</label>
+    <input type="text" [(ngModel)]="property.city" placeholder="City">
+  </div>
+
+  <div class="form-group">
+    <label>Address</label>
+    <input type="text" [(ngModel)]="property.address" placeholder="Full Address">
+  </div>
+
+  <div class="form-group">
+    <label>Category</label>
+
+    <select [(ngModel)]="property.category_id">
+      <option value="">Select Category</option>
+      <option *ngFor="let c of categories" [value]="c.id">
+        {{c.name}}
+      </option>
+    </select>
+
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea rows="4" [(ngModel)]="property.description"></textarea>
+  </div>
+
+  <button class="btn-create" (click)="createProperty()" [disabled]="isLoading">
+
+    <span *ngIf="!isLoading">Create Property</span>
+    <span *ngIf="isLoading">Creating...</span>
+
+  </button>
+
+  <div class="success" *ngIf="successMsg">{{successMsg}}</div>
+  <div class="error" *ngIf="errorMsg">{{errorMsg}}</div>
+
+</div>

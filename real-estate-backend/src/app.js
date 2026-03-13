@@ -7,6 +7,9 @@ const { errorHandler } = require("./middlewares/error.middleware");
 
 const authRoutes  = require("./routes/auth.routes");
 const adminRoutes = require("./routes/admin.routes");
+const agentRoutes = require("./routes/agent.routes");
+const propertyRoutes = require("./routes/property.routes");
+
 
 const app = express();
 
@@ -37,6 +40,9 @@ app.use("/uploads", express.static("uploads"));
 // Routes
 app.use("/api/auth",  authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/properties", propertyRoutes);
+
+app.use("/api/agents", agentRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

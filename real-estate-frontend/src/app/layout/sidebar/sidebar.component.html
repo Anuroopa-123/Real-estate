@@ -1,0 +1,19 @@
+<div class="sidebar">
+
+  <h2 class="logo">Elite Properties</h2>
+
+  <ul>
+
+    <li *ngFor="let item of menu">
+
+      <a [routerLink]="item.path">
+
+        {{item.label}}
+
+      </a>
+
+    </li>
+
+  </ul>
+
+</div>

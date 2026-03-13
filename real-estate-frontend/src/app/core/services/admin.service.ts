@@ -25,16 +25,32 @@ export class AdminService {
   toggleUserStatus(id: number)     { return this.http.patch(`${this.base}/users/${id}/toggle`, {}); }
  
   // Properties
-  getProperties(filters: any) {
-    let params = new HttpParams();
-    Object.entries(filters).forEach(([k, v]) => { if (v) params = params.set(k, v as string); });
-    return this.http.get(`${this.base}/properties`, { params });
-  }
+ getProperties(filters: any) {
+  let params = new HttpParams();
+
+  Object.entries(filters).forEach(([k,v])=>{
+    if(v) params = params.set(k,v as string)
+  });
+
+  return this.http.get(`${environment.apiUrl}/properties`,{params});
+}
   approveProperty(id: number)  { return this.http.patch(`${this.base}/properties/${id}/approve`, {}); }
   rejectProperty(id: number)   { return this.http.patch(`${this.base}/properties/${id}/reject`, {}); }
   deleteProperty(id: number)   { return this.http.delete(`${this.base}/properties/${id}`); }
  
   // Appointments
+
+
+
+
+
+
+
+
+
+
+
+  
   getAppointments(filters?: any) {
     let params = new HttpParams();
     if (filters) Object.entries(filters).forEach(([k, v]) => { if (v) params = params.set(k, v as string); });
@@ -43,5 +59,20 @@ export class AdminService {
   cancelAppointment(id: number, reason: string) {
     return this.http.patch(`${this.base}/appointments/${id}/cancel`, { reason });
   }
+ createProperty(data: any) {
+  return this.http.post(`${environment.apiUrl}/properties`, data);
+}
+// Agents
+getAgents() {
+  return this.http.get(`${environment.apiUrl}/agents`);
+}
+
+createAgent(data:any){
+  return this.http.post(`${environment.apiUrl}/agents`, data);
+}
+
+deleteAgent(id:number){
+  return this.http.delete(`${environment.apiUrl}/agents/${id}`);
+}
 }
  

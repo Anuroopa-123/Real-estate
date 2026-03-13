@@ -3,7 +3,7 @@ CREATE TABLE if not exists users (
  name VARCHAR(100) NOT NULL,
  email VARCHAR(150) UNIQUE NOT NULL,
  password VARCHAR(255) NOT NULL,
- role ENUM('SUPER_ADMIN','ADMIN','BUYER') NOT NULL,
+ role ENUM('SUPER_ADMIN','ADMIN','AGENT','BUYER') NOT NULL,
  status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE',
  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -149,7 +149,7 @@ CREATE TABLE if not exists reviews (
 
 -- ── 11. Create admins──────────────────────────────────────────────
 
-CREATE TABLE admins (
+CREATE TABLE if not exists admins (
  id INT AUTO_INCREMENT PRIMARY KEY,
 
  user_id INT NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE admins (
 );
 
 
-CREATE TABLE buyers (
+CREATE TABLE if not exists buyers (
  id INT AUTO_INCREMENT PRIMARY KEY,
 
  user_id INT NOT NULL,
@@ -181,4 +181,16 @@ CREATE TABLE buyers (
  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE if not exists agents (
+ id INT AUTO_INCREMENT PRIMARY KEY,
+ user_id INT NOT NULL,
+ phone VARCHAR(20),
+ experience_years INT DEFAULT 0,
+ created_by INT,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+ FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+ FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
